@@ -1,6 +1,10 @@
 import './css/styles.css';
 import Debounce from 'lodash.debounce';
 import { fetchCountries } from './js/fetchCountries';
+import {
+  createMarkupToDescription,
+  createMarkupToList,
+} from './js/createMarkup';
 import Notiflix from 'notiflix';
 const DEBOUNCE_DELAY = 300;
 const inputRef = document.querySelector('#search-box');
@@ -27,37 +31,9 @@ inputRef.addEventListener(
           return;
         }
         if (result.length === 1) {
-          return result
-            .map(
-              element => `<img width="40" height="30" src="${
-                element.flags.svg
-              }"/><h1 class="country-info__name">${
-                element.name['official']
-              }</h1><ul class="country-info__list">
-        <li class="country-info__item">
-          <h3>Capital:</h3>
-          <p class="country-info__description">${element.capital}</p>
-        </li>
-        <li class="country-info__item">
-          <h3>Population:</h3>
-          <p class="country-info__description">${element.population}</p>
-        </li>
-        <li class="country-info__item">
-          <h3>Languages:</h3>
-          <p class="country-info__description">${Object.values(
-            element.languages
-          )}</p>
-        </li>
-      </ul>`
-            )
-            .join('');
+          return createMarkupToDescription(result);
         }
-        return result
-          .map(
-            element =>
-              `<li class="country-list__item"><img width=40 height=30 src="${element.flags.svg}"><h2 class="country-list__name">${element.name['official']}</h2></li>`
-          )
-          .join('');
+        return createMarkupToList(result);
       })
       .then(e => {
         if (!e) {
