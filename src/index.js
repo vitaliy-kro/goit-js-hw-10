@@ -14,6 +14,7 @@ const countryInfoRef = document.querySelector('.country-info');
 inputRef.addEventListener(
   'input',
   Debounce(e => {
+    clearMarkup();
     const trimmedValue = e.target.value.trim();
     if (trimmedValue === '') return;
     fetchCountries(trimmedValue)
@@ -39,8 +40,7 @@ inputRef.addEventListener(
         if (!e) {
           return;
         }
-        countryListRef.innerHTML = '';
-        countryInfoRef.innerHTML = '';
+        clearMarkup();
         e.includes('country-list__item')
           ? countryListRef.insertAdjacentHTML('beforeend', e)
           : countryInfoRef.insertAdjacentHTML('beforeend', e);
@@ -51,3 +51,8 @@ inputRef.addEventListener(
       });
   }, DEBOUNCE_DELAY)
 );
+
+function clearMarkup() {
+  countryListRef.innerHTML = '';
+  countryInfoRef.innerHTML = '';
+}
