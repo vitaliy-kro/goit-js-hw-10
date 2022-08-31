@@ -16,34 +16,20 @@ inputRef.addEventListener(
   Debounce(e => {
     clearMarkup();
     const trimmedValue = e.target.value.trim();
-    if (trimmedValue === '') return;
+    if (!trimmedValue) return;
     fetchCountries(trimmedValue)
-      .then(value => {
-        if (!value.ok) {
-          throw new Error(value.status);
-        }
-        return value.json();
-      })
       .then(result => {
         if (result.length >= 10) {
-          Notiflix.Notify.info(
-            'Too many matches found. Please enter a more specific name.'
-          );
-          return;
+          return ForToManyMatchesMessage();
         }
-        if (result.length === 1) {
-          return createMarkupToDescription(result);
-        }
-        return createMarkupToList(result);
+        return updateMarkup(result);
       })
       .then(e => {
         if (!e) {
           return;
         }
         clearMarkup();
-        e.includes('country-list__item')
-          ? countryListRef.insertAdjacentHTML('beforeend', e)
-          : countryInfoRef.insertAdjacentHTML('beforeend', e);
+        addingElementsToDOM(e);
       })
       .catch(e => {
         console.log(e);
@@ -55,4 +41,22 @@ inputRef.addEventListener(
 function clearMarkup() {
   countryListRef.innerHTML = '';
   countryInfoRef.innerHTML = '';
+}
+
+function updateMarkup(element) {
+  if (element.length === 1) {
+    return createMarkupToDescription(element);
+  }
+  return createMarkupToList(element);
+}
+
+function addingElementsToDOM(element) {
+  element.includes('country-list__item')
+    ? countryListRef.insertAdjacentHTML('beforeend', element)
+    : countryInfoRef.insertAdjacentHTML('beforeend', element);
+}
+function ForToManyMatchesMessage() {
+  return Notiflix.Notify.info(
+    'Too many matches found. Please enter a more specific name.'
+  );
 }
