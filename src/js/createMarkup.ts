@@ -1,7 +1,9 @@
-export function createMarkupToDescription(country) {
+import { Country } from '../types/countries.types';
+
+export function createMarkupToDescription(country: [Country]) {
   return country
     .map(
-      element => `<img width="40" height="30" src="${
+      element => `<img alt='${element.name} flag' width="40" height="30" src="${
         element.flags.svg
       }"/><h1 class="country-info__name">${
         element.name['official']
@@ -25,11 +27,11 @@ export function createMarkupToDescription(country) {
     .join('');
 }
 
-export function createMarkupToList(countries) {
+export function createMarkupToList(countries: [Country]) {
   return countries
     .map(
       element =>
-        `<li class="country-list__item"><img width=40 height=30 src="${element.flags.svg}"><h2 class="country-list__name">${element.name['official']}</h2></li>`
+        `<li class="country-list__item"><img alt="${element.name} flag" width=40 height=30 src="${element.flags.svg}"><h2 class="country-list__name">${element.name['official']}</h2></li>`
     )
     .join('');
 }
